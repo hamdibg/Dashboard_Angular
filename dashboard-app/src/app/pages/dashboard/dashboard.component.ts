@@ -1,10 +1,10 @@
-
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, ElementRef, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Chart } from 'chart.js/auto';
 import { DashboardService } from '../../services/dashboard.service';
 import { ChartData, KPI } from '../../models/dashboard.model';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -35,12 +35,12 @@ import { ChartData, KPI } from '../../models/dashboard.model';
       <div class="charts-container">
         <div class="chart-card">
           <h3>Revenue Trend</h3>
-          <canvas #revenueChart></canvas>
+          <canvas #revenueCanvas></canvas>
         </div>
         
         <div class="chart-card">
           <h3>Monthly Performance</h3>
-          <canvas #performanceChart></canvas>
+          <canvas #performanceCanvas></canvas>
         </div>
       </div>
 
@@ -140,60 +140,27 @@ import { ChartData, KPI } from '../../models/dashboard.model';
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      height: 400px;
     }
 
-    .chart-card h3 {
-      color: #343a40;
-      margin-bottom: 15px;
-    }
-
-    .activity-section {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .activity-list {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .activity-item {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      border-bottom: 1px solid #f8f9fa;
-    }
-
-    .activity-icon {
-      background: #f8f9fa;
-      padding: 10px;
-      border-radius: 50%;
-      margin-right: 15px;
-    }
-
-    .activity-details {
-      flex: 1;
-    }
-
-    .activity-message {
-      color: #343a40;
-    }
-
-    .activity-time {
-      color: #6c757d;
-      font-size: 0.8rem;
+    canvas {
+      width: 100% !important;
+      height: 300px !important;
     }
   `]
 })
+
 export class DashboardComponent implements OnInit {
+  @ViewChild('revenueCanvas') revenueCanvas!: ElementRef;
+  @ViewChild('performanceCanvas') performanceCanvas!: ElementRef;
+  
+  private platformId = inject(PLATFORM_ID);
+  private revenueChart: Chart | null = null;
+  private performanceChart: Chart | null = null;
+
   kpis: KPI[] = [];
   chartData: ChartData[] = [];
   recentActivities: any[] = [];
-  private revenueChart: Chart | null = null;
-  private performanceChart: Chart | null = null;
   Math = Math; // Make Math available in template
 
   constructor(private dashboardService: DashboardService) {}
@@ -205,7 +172,55 @@ export class DashboardComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.initializeCharts();
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeCharts();
+    }
+  }
+
+  private initializeCharts() {
+    if (!this.revenueCanvas || !this.performanceCanvas) return;
+
+    const revenueCtx = this.revenueCanvas.nativeElement.getContext('2d');
+    const performanceCtx = this.performanceCanvas.nativeElement.getContext('2d');
+
+    this.revenueChart = new Chart(revenueCtx, {
+      type: 'line',
+      data: {
+        labels: this.chartData.map(d => d.name),
+        datasets: [{
+          label: 'Revenue',
+          data: this.chartData.map(d => d.value),
+          borderColor: '#3498db',
+          tension: 0.4,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    this.performanceChart = new Chart(performanceCtx, {
+      type: 'bar',
+      data: {
+        labels: this.chartData.map(d => d.name),
+        datasets: [{
+          label: 'Performance',
+          data: this.chartData.map(d => d.value),
+          backgroundColor: '#2ecc71'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
   }
 
   private loadKPIs() {
@@ -255,52 +270,6 @@ export class DashboardComponent implements OnInit {
         time: new Date(Date.now() - 7200000)
       }
     ];
-  }
-
-  private initializeCharts() {
-    const revenueCtx = document.getElementById('revenueChart') as HTMLCanvasElement;
-    const performanceCtx = document.getElementById('performanceChart') as HTMLCanvasElement;
-
-    if (revenueCtx) {
-      this.revenueChart = new Chart(revenueCtx, {
-        type: 'line',
-        data: {
-          labels: this.chartData.map(d => d.name),
-          datasets: [{
-            label: 'Revenue',
-            data: this.chartData.map(d => d.value),
-            borderColor: '#3498db',
-            tension: 0.4,
-            fill: false
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
-      });
-    }
-
-    if (performanceCtx) {
-      this.performanceChart = new Chart(performanceCtx, {
-        type: 'bar',
-        data: {
-          labels: this.chartData.map(d => d.name),
-          datasets: [{
-            label: 'Performance',
-            data: this.chartData.map(d => d.value),
-            backgroundColor: '#2ecc71'
-          }]
-        },
-        options: {
-          responsive: true
-        }
-      });
-    }
   }
 
   private updateCharts() {
