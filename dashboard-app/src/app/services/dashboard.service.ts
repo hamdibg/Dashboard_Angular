@@ -30,9 +30,9 @@ export class DashboardService {
 
   getUsers(): Observable<User[]> {
     return of([
-      { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-      { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-      { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'User' }
+      { id: 1, name: 'Hamdi', email: 'Hamdi@sesame.com', role: 'Admin' },
+      { id: 2, name: 'Fedi', email: 'Fedi@sesame.com', role: 'User' },
+      { id: 3, name: 'Fatma', email: 'Fatma@sesame.com', role: 'User' }
     ]);
   }
 }

@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
         <input type="text" placeholder="Search...">
       </div>
       <div class="user-info">
-        <span class="user-name">John Doe</span>
+        <span class="user-name">Hamdi</span>
         <button class="profile-btn">Profile</button>
       </div>
     </header>
