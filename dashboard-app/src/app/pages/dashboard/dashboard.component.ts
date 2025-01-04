@@ -5,6 +5,26 @@ import { Chart } from 'chart.js/auto';
 import { DashboardService } from '../../services/dashboard.service';
 import { ChartData, KPI } from '../../models/dashboard.model';
 
+/**
+ * DashboardComponent serves as the main analytics dashboard view
+ * 
+ * @class DashboardComponent
+ * @implements OnInit
+ * @description Displays key performance indicators (KPIs) and analytics charts
+ *              Features include:
+ *              - Real-time KPI metrics display
+ *              - Trend indicators with percentage changes
+ *              - Interactive charts using Chart.js
+ *              - Responsive layout for various screen sizes
+ * 
+ * @dependencies
+ * - Chart.js for data visualization
+ * - DashboardService for data fetching
+ * - CommonModule for common Angular directives
+ * 
+ * @example
+ * <app-dashboard></app-dashboard>
+ */
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +32,6 @@ import { ChartData, KPI } from '../../models/dashboard.model';
   imports: [CommonModule, HttpClientModule],
   template: `
     <div class="dashboard">
-      <!-- KPI Cards Section -->
       <div class="kpi-cards">
         @for (kpi of kpis; track kpi.title) {
           <div class="kpi-card" [ngClass]="{'positive': kpi.trend > 0, 'negative': kpi.trend < 0}">
@@ -31,7 +50,6 @@ import { ChartData, KPI } from '../../models/dashboard.model';
         }
       </div>
 
-      <!-- Charts Section -->
       <div class="charts-container">
         <div class="chart-card">
           <h3>Revenue Trend</h3>
@@ -161,7 +179,7 @@ export class DashboardComponent implements OnInit {
   kpis: KPI[] = [];
   chartData: ChartData[] = [];
   recentActivities: any[] = [];
-  Math = Math; // Make Math available in template
+  Math = Math; 
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -230,7 +248,6 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading KPIs:', error);
-        // Implement error handling UI feedback
       }
     });
   }
@@ -243,13 +260,11 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading chart data:', error);
-        // Implement error handling UI feedback
       }
     });
   }
 
   private loadRecentActivities() {
-    // Simulate recent activities data
     this.recentActivities = [
       {
         id: 1,

@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+/**
+ * Interface representing user configurable settings
+ * @interface Settings
+ */
+
 interface Settings {
   notifications: boolean;
   emailUpdates: boolean;
@@ -9,6 +14,25 @@ interface Settings {
   language: string;
   timezone: string;
 }
+
+/**
+ * SettingsComponent manages user preferences and application configuration
+ * 
+ * @class SettingsComponent
+ * @description Handles user preferences including:
+ *              - Theme switching (dark/light mode)
+ *              - Notification preferences
+ *              - Language selection
+ *              - Timezone configuration
+ *              - Email update preferences
+ * 
+ * @dependencies
+ * - CommonModule
+ * - FormsModule for two-way binding
+ * 
+ * @example
+ * <app-settings></app-settings>
+ */
 
 @Component({
   selector: 'app-settings',
@@ -201,7 +225,6 @@ export class SettingsComponent {
   }
 
   saveSettings() {
-    // Here you would typically save to a backend service
     console.log('Settings saved:', this.settings);
     alert('Settings saved successfully!');
     this.initialSettings = { ...this.settings };

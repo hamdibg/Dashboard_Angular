@@ -1,10 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';  // Add this import
+import { HttpClientModule } from '@angular/common/http';  
 import { DashboardService } from '../../services/dashboard.service';
 import { User } from '../../models/dashboard.model';
 
+/**
+ * UsersComponent handles user management operations
+ * 
+ * @class UsersComponent
+ * @description Manages user CRUD operations including:
+ *              - User listing with filtering and sorting
+ *              - User creation and editing
+ *              - Role management
+ *              - Modal handling for user operations
+ * 
+ * @methods
+ * - saveUser: Handles user creation/update
+ * - closeModal: Resets modal state and form
+ * - filterUsers: Applies filters to user list
+ * - sortUsers: Handles user list sorting
+ * 
+ * @example
+ * <app-users></app-users>
+ */
 
 @Component({
   selector: 'app-users',

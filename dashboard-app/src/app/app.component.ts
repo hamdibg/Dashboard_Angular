@@ -1,4 +1,3 @@
-// filepath: /C:/Users/Hamdi/Desktop/claude/hamdi_ben_ghrib/dashboard-app/src/app/app.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
